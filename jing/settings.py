@@ -37,6 +37,7 @@ INSTALLED_APPS = [
 
     'users',
     'core',
+    'llm',
     
     'django.contrib.admin',
     'django.contrib.auth',

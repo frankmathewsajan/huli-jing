@@ -3,31 +3,14 @@ from rest_framework.response import Response
 from .models import Prompt
 from .serializers import PromptSerializer
 import hashlib
-from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
-from .llm import generate_daily_plan_for_user
 
-class DailyPlanView(APIView):
-    permission_classes = [IsAuthenticated]
 
-    def get(self, request):
-        """
-        Generate and return the daily plan for the authenticated user.
-        """
-        try:
-            plan = generate_daily_plan_for_user(request.user)
-            return Response(plan.model_dump(), status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response(
-                {"error": str(e)},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-        
 class PromptCreateView(generics.ListCreateAPIView):
     """
     POST: Create or retrieve a cached prompt for the authenticated user.
     GET:  List all prompts belonging to the authenticated user.
     """
+
     serializer_class = PromptSerializer
     permission_classes = [permissions.IsAuthenticated]
 
