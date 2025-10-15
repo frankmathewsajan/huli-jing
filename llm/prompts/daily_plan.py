@@ -1,54 +1,86 @@
 from llm.prompts.__init__ import format_json, render_date_info
 from datetime import datetime
 
-def build_daily_planner_prompt(goals_list, commitments_list, target_date: datetime, current_time: datetime = None):
-    """
-    Return the system prompt text used by Gemini for daily planning.
-    Includes date, current time, and enforces priority choices.
-    """
-    date_str = render_date_info(target_date)
-    now = current_time or datetime.now()
-    current_time_str = now.strftime("%I:%M %p")  # e.g., "05:30 PM"
-    remaining_hours = 24 - now.hour - now.minute/60
 
-    goals_section = format_json(goals_list) if goals_list else "No goals provided yet."
-    commitments_section = format_json(commitments_list) if commitments_list else "No commitments provided yet."
+def plan_the_day(goals, commitments, patterns, feedback, target_date: datetime = None, override: str = None) -> str:
+    """
+    Build the system prompt for Gemini (or LLM) to plan the user's next day.
+    Includes user goals, commitments, patterns, yesterday feedback, and optional override content.
+    Returns structured JSON matching the DailyPlan schema.
+    """
+    target_date = target_date or datetime.now()
+    date_str = render_date_info(target_date)
+    now = datetime.now()
+    current_time_str = now.strftime("%I:%M %p")  # e.g., "05:30 PM"
+    remaining_hours = 24 - now.hour - now.minute / 60
+
+    # Fallback text if nothing exists
+    goals_section = goals or "No goals recorded yet."
+    commitments_section = commitments or "No commitments recorded yet."
+    patterns_section = patterns or "No behavior patterns detected yet."
+    feedback_section = feedback or "No task feedback provided yet."
+    override_section = override.strip() if override and override.strip() else None
+
+    override_text = f"\n\n⚡ **OVERRIDE / NEW TASKS**\n{override_section}" if override_section else ""
 
     return f"""
-You are an AI planner designed for neurodivergent users.
-Your goal is to create a realistic, compassionate, and achievable plan for a single day.
+You are an **AI daily planner and adaptive coach** for neurodivergent users.
+Plan the user's **next 24 hours** compassionately, based on past performance, feedback, and optional overrides.
 
-Date: {date_str}
-Current Time: {current_time_str}
+────────────────────────────────────────────
+📅 DATE CONTEXT
+Date to plan for: {date_str}
+Current time: {current_time_str}
+Approximate remaining hours today: {remaining_hours:.1f}
 
-IMPORTANT:
-- The schedule should start from the current time and continue for the rest of the day.
-- Do not schedule tasks in the past.
-- Adjust task durations to fit within available hours.
-
-You have approximately {remaining_hours:.1f} hours left today to schedule tasks.
-
-
-USER'S GOALS:
+────────────────────────────────────────────
+🎯 USER’S GOALS
 {goals_section}
 
-USER'S COMMITMENTS:
+🧭 USER’S COMMITMENTS
 {commitments_section}
 
-PRIORITY RULES:
-- The only valid priorities are: "Highest", "High", "Urgent", "Medium", "Low".
-- Always assign one of these values for each task's priority.
-- Use "Highest" only for the absolutely most critical tasks.
-- Use "Urgent" for tasks that require attention soon.
-- "High", "Medium", "Low" for everything else appropriately.
+🧠 USER’S BEHAVIORAL PATTERNS
+{patterns_section}
 
-Requirements:
-- Respect fixed commitments
-- Break goals into daily tasks with estimated durations
-- Prioritize high-priority goals
-- Suggest flexible task times where possible
-- Include rest and transition periods
-- Provide total committed vs available hours
-- Give clear, neurodivergent-friendly instructions
-- Return a valid JSON object following the DailyPlan schema.
+💬 PREVIOUS DAY’S TASK FEEDBACK
+{feedback_section}
+{override_text}
+
+────────────────────────────────────────────
+PLANNING PRINCIPLES
+- Balance focus and rest — avoid overwhelming schedules.
+- Reflect on feedback:
+  - High-rated tasks (4–5): keep timing/complexity.
+  - Low-rated (1–2): simplify or reframe.
+  - Missed tasks: gently carry forward or replace with smaller actions.
+- Respect deadlines from commitments.
+- Mix learning, breaks, meals, and well-being.
+- Encourage small wins over perfection.
+- Override tasks (if any) take **highest priority**.
+
+────────────────────────────────────────────
+PRIORITY RULES
+Use only: "Highest", "Urgent", "High", "Medium", "Low".
+“Highest” only for critical items (deadlines, exams, meals, override tasks).
+
+────────────────────────────────────────────
+OUTPUT FORMAT
+Return a single valid JSON following the `DailyPlan` schema.
+
+Key Fields:
+- `updated_goals`: refined goals, reprioritized.
+- `updated_commitments`: updated commitments reflecting new constraints/progress.
+- `user_behaviour_patterns`: adaptive insights.
+- `tasks`: actionable items with realistic durations/times.
+- `notes`: motivational summary, safety, or day insight.
+
+Ensure plan fits within available hours, includes breaks, and is flexible.
+Override tasks (if provided) must be included and scheduled realistically.
+
+────────────────────────────────────────────
+SAFETY:
+Exclude nonsensical or unsafe text; record reason in `notes`.
+
+Your output must be a **single valid JSON** object matching the `DailyPlan` schema.
 """

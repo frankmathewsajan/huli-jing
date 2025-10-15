@@ -12,7 +12,7 @@ class PromptSerializer(serializers.ModelSerializer):
             "llm_response",
             "hash",
             "used_count",
-            "is_mock",
+            "is_refined",
             "created_at"
         ]
         read_only_fields = ["id", "llm_response", "used_count", "created_at"]

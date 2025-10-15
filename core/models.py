@@ -8,12 +8,15 @@ class Prompt(models.Model):
     """
     Cache of raw prompt text + the LLM response (structured).
     hash: deterministic hash of (type + text) to allow quick exact-match cache hits.
-    is_mock: mark dev-mode mocked responses if using local test data.
+    is_refined: whether this prompt has been refined/cleaned by LLM already.
+    used_count: how many times this prompt has been used in generation (for analytics).
     """
     PROMPT_TYPE_CHOICES = [
         ("goal", "Goal Input"),
         ("commitment", "Commitment Input"),
         ("summary", "Summary Request"),
+        ("onboarding", "Onboarding"),
+        ("override", "Override"),
         ("other", "Other"),
     ]
 
@@ -29,7 +32,7 @@ class Prompt(models.Model):
     llm_response = models.JSONField(null=True, blank=True, help_text="Structured JSON returned by LLM")
     hash = models.CharField(max_length=128, unique=True, help_text="sha256(or similar) of type+text")
     used_count = models.PositiveIntegerField(default=0)
-    is_mock = models.BooleanField(default=False)
+    is_refined = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

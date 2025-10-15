@@ -1,10 +1,11 @@
 from django.db import models
-
+from pydantic import ValidationError
 
 # ======================================================
 # Task Model
 # ======================================================
 class Task(models.Model):
+    RATING_CHOICES = [(i, str(i)) for i in range(1, 6)]
     PRIORITY_CHOICES = [
         ("Highest", "Highest"),
         ("High", "High"),
@@ -20,20 +21,38 @@ class Task(models.Model):
     related_goal = models.CharField(max_length=255, blank=True, null=True)
     suggested_time = models.TimeField(blank=True, null=True)
     is_flexible = models.BooleanField(default=True)
+    completed = models.BooleanField(default=False)
+    feedback = models.TextField(blank=True, null=True)
+    rating = models.PositiveSmallIntegerField(
+        choices=RATING_CHOICES, blank=True, null=True
+    )
 
     class Meta:
         ordering = ["-priority", "estimated_duration_minutes"]
         verbose_name = "Task"
         verbose_name_plural = "Tasks"
+    def clean(self):
+        if self.rating and not (1 <= self.rating <= 5):
+            raise ValidationError("Rating must be between 1 and 5.")
 
     def __str__(self) -> str:
-        return f"{self.task_name} ({self.priority})"
+        return f"{self.task_name} ({self.priority}, {'done' if self.completed else 'pending'})"
+    def __repr__(self):
+        return f"<Task {self.id}: {self.task_name}>"
+
 
 
 # ======================================================
 # Daily Schedule Model
 # ======================================================
 class DailySchedule(models.Model):
+    user = models.ForeignKey(
+        "users.User",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="daily_schedules",
+    )
     date = models.DateField(unique=True)
     day_of_week = models.CharField(max_length=20)
     tasks = models.ManyToManyField(Task, related_name="daily_schedules")
@@ -52,6 +71,8 @@ class DailySchedule(models.Model):
 
     class Meta:
         ordering = ["date"]
+        indexes = [models.Index(fields=["date"])]
+
         verbose_name = "Daily Schedule"
         verbose_name_plural = "Daily Schedules"
 

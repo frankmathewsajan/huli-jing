@@ -4,7 +4,8 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 from django.db import transaction
 
-def save_daily_plan_to_db(daily_plan: DailyPlan) -> DailySchedule:
+
+def save_daily_plan_to_db(user, daily_plan: DailyPlan) -> DailySchedule:
     """
     Convert a DailyPlan (Pydantic model) into Django models:
     - DailySchedule
@@ -17,6 +18,7 @@ def save_daily_plan_to_db(daily_plan: DailyPlan) -> DailySchedule:
     # Using transaction.atomic for safer writes
     with transaction.atomic():
         schedule, _ = DailySchedule.objects.get_or_create(
+            user=user,
             date=schedule_date,
             defaults={
                 "day_of_week": daily_plan.day_of_week,
@@ -52,14 +54,6 @@ def save_daily_plan_to_db(daily_plan: DailyPlan) -> DailySchedule:
                 },
             )
             schedule.tasks.add(task)
-
-        # Save adaptive metadata if model has fields for them
-        if hasattr(schedule, "updated_commitments"):
-            schedule.updated_commitments = daily_plan.updated_commitments
-        if hasattr(schedule, "updated_goals"):
-            schedule.updated_goals = daily_plan.updated_goals
-        if hasattr(schedule, "user_behaviour_patterns"):
-            schedule.user_behaviour_patterns = daily_plan.user_behaviour_patterns
 
         schedule.save()
 

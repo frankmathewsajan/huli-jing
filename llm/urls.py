@@ -1,9 +1,11 @@
-from django.urls import path
-from llm.views import DailyPlanView
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import TaskViewSet, DailyScheduleViewSet
 
+router = DefaultRouter()
+router.register(r"tasks", TaskViewSet, basename="task")
+router.register(r"schedules", DailyScheduleViewSet, basename="schedule")
 app_name = "llm"
-
 urlpatterns = [
-
-    path("daily-plan/", DailyPlanView.as_view(), name="daily-plan"),
+    path("", include(router.urls)),
 ]

@@ -1,24 +1,31 @@
-from django.shortcuts import render
-
-from rest_framework.views import APIView
+from rest_framework import viewsets, status
+from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.permissions import IsAuthenticated  
-from llm.planners.daily_plan import generate_daily_plan_for_user
+from rest_framework.permissions import IsAuthenticated
 
-class DailyPlanView(APIView):
+from .models import Task, DailySchedule
+from .serializers import TaskSerializer, DailyScheduleSerializer
+
+
+class TaskViewSet(viewsets.ModelViewSet):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
-        """
-        Generate and return the daily plan for the authenticated user.
-        """
-        try:
-            plan = generate_daily_plan_for_user(request.user)
-            return Response(plan.model_dump(), status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response(
-                {"error": str(e)},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-      
+    @action(detail=True, methods=["post"], url_path="feedback")
+    def give_feedback(self, request, pk=None):
+        """Allows user to submit feedback/rating for a task."""
+        task = self.get_object()
+        serializer = TaskSerializer(task, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class DailyScheduleViewSet(viewsets.ModelViewSet):
+    queryset = DailySchedule.objects.all()
+    serializer_class = DailyScheduleSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
