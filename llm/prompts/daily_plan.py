@@ -48,39 +48,36 @@ Approximate remaining hours today: {remaining_hours:.1f}
 {override_text}
 
 ────────────────────────────────────────────
-PLANNING PRINCIPLES
-- Balance focus and rest — avoid overwhelming schedules.
-- Reflect on feedback:
-  - High-rated tasks (4–5): keep timing/complexity.
-  - Low-rated (1–2): simplify or reframe.
-  - Missed tasks: gently carry forward or replace with smaller actions.
-- Respect deadlines from commitments.
-- Mix learning, breaks, meals, and well-being.
-- Encourage small wins over perfection.
-- Override tasks (if any) take **highest priority**.
+PRIORITY RULES:
+- Valid values only: "Highest", "High", "Urgent", "Medium", "Low".
+- "Highest" → absolutely critical tasks only.
+- "Urgent" → requires attention soon.
+- "High", "Medium", "Low" → assign appropriately for all other tasks.
 
-────────────────────────────────────────────
-PRIORITY RULES
-Use only: "Highest", "Urgent", "High", "Medium", "Low".
-“Highest” only for critical items (deadlines, exams, meals, override tasks).
+Important Note:
+- Not every goal or commitment needs to appear in today's schedule.
+- Prioritize fixed commitments, immediate deadlines, and high-priority consistent goals.
+- Other goals should be retained internally (for `updated_goals`) but may be deferred to future days.
+- Ensure the user retains context so they don't lose touch with postponed items.
 
-────────────────────────────────────────────
-OUTPUT FORMAT
-Return a single valid JSON following the `DailyPlan` schema.
+PLANNING RULES:
+- Do NOT schedule tasks in the past.
+- Fit total duration within available hours.
+- Respect all fixed-time commitments.
+- Break broad goals into smaller, actionable tasks.
+- Suggest start times where possible, or mark tasks as flexible.
+- Include rest / transition periods between focus blocks.
+- Provide total committed vs available hours.
+- Use simple and encouraging language.
 
-Key Fields:
-- `updated_goals`: refined goals, reprioritized.
-- `updated_commitments`: updated commitments reflecting new constraints/progress.
-- `user_behaviour_patterns`: adaptive insights.
-- `tasks`: actionable items with realistic durations/times.
-- `notes`: motivational summary, safety, or day insight.
+STRUCTURED OUTPUT REQUIREMENTS:
+Return a **valid JSON** object strictly following the `DailyPlan` schema.
 
-Ensure plan fits within available hours, includes breaks, and is flexible.
-Override tasks (if provided) must be included and scheduled realistically.
+Important Fields:
+- `updated_goals`: cleaned and refined version of user's goals, with typos or vague items fixed + including deferred items not scheduled today
+- `updated_commitments`: refined version of commitments from messy NL input.
+- `user_behaviour_patterns`: behavioral or motivational patterns inferred from user's style or priorities.
 
-────────────────────────────────────────────
 SAFETY:
-Exclude nonsensical or unsafe text; record reason in `notes`.
-
-Your output must be a **single valid JSON** object matching the `DailyPlan` schema.
+If any input contains unsafe, nonsensical, or malicious text, skip it from planning and log a short explanation in `notes`.
 """
