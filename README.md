@@ -1,143 +1,73 @@
-# 🐉 Huli — AI-Powered Daily Planning for Neurodivergent Minds# 🐉 Huli — Neurodivergent-Friendly Day Orchestration Backend
+# 🐉 Huli — AI-Powered Daily Planning for Neurodivergent Minds
 
+> "Not just another planner — Huli helps you *reclaim your flow*."
 
-
-> "Not just another planner — Huli helps you *reclaim your flow*."> “Not just another planner — Huli helps you *reclaim your flow*.”
-
-
-
-[![Django](https://img.shields.io/badge/Django-5.2+-092E20?style=flat&logo=django)](https://www.djangoproject.com/)---
-
+[![Django](https://img.shields.io/badge/Django-5.2+-092E20?style=flat&logo=django)](https://www.djangoproject.com/)
 [![DRF](https://img.shields.io/badge/DRF-3.16+-a30000?style=flat)](https://www.django-rest-framework.org/)
+[![Python](https://img.shields.io/badge/Python-3.12+-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org/)
+[![Google Gemini](https://img.shields.io/badge/Google_Gemini-2.5-4285F4?style=flat&logo=google)](https://ai.google.dev/)
 
-[![Python](https://img.shields.io/badge/Python-3.12+-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org/)### 🧭 Overview
+---
 
-[![Google Gemini](https://img.shields.io/badge/Google_Gemini-2.5-4285F4?style=flat&logo=google)](https://ai.google.dev/)**Huli** is the backend service powering an AI-driven daily planning application designed to help individuals — especially **neurodivergent humans** — manage, prioritize, and structure their days with clarity and compassion.
+## 🧭 What is Huli?
 
+**Huli** is an AI-driven daily planning assistant backend designed specifically for **neurodivergent individuals** who struggle with focus, time management, and executive dysfunction. 
 
-
----It uses the **Huli-Jing Engine**, a planning and reflection algorithm that adapts to user behavior, energy levels, and real-world commitments. The system converts natural-language goals and fixed time blocks (like classes, sleep, or work) into realistic hour-by-hour plans.
-
-
-
-## 🧭 What is Huli?---
-
-
-
-**Huli** is an AI-driven daily planning assistant backend designed specifically for **neurodivergent individuals** who struggle with focus, time management, and executive dysfunction. ### ⚙️ Tech Stack
-
-- **Django REST Framework** — API backbone  
-
-Think of Huli as your **compassionate productivity companion** that:- **SimpleJWT** — secure, token-based authentication  
-
-- 🧠 **Understands natural language** — just tell it your goals in plain English- **PostgreSQL / SQLite** — flexible relational storage  
-
-- ⏰ **Respects your commitments** — works around fixed time blocks (classes, meetings, sleep)- **Python 3.11+** — main runtime environment  
-
+Think of Huli as your **compassionate productivity companion** that:
+- 🧠 **Understands natural language** — just tell it your goals in plain English
+- ⏰ **Respects your commitments** — works around fixed time blocks (classes, meetings, sleep)
 - 🎯 **Creates realistic plans** — generates hour-by-hour schedules using AI (Google Gemini 2.5)
-
-- 🔄 **Learns from feedback** — adapts to your patterns and preferences---
-
+- 🔄 **Learns from feedback** — adapts to your patterns and preferences
 - 💬 **Nudges you gently** — designed to keep you on track without overwhelming you
 
-## 🧩 Huli-Jing Engine (Concept)
+**Note:** This is a **backend-only API**. There's no frontend yet — that's where you come in! (See [Contributing](#-contributing))
 
-**Note:** This is a **backend-only API**. There's no frontend yet — that's where you come in! (See [Contributing](#-contributing))The *Huli-Jing Engine* acts as the heart of the system — a context-aware scheduler that merges:
-
-1. **User goals** → parsed from natural language
-
----2. **Commitments** → fixed time blocks (classes, work, etc.)
-
-3. **Adaptive logic** → fills available hours intelligently
+---
 
 ## 🏗️ Architecture: The Huli-Jing Engine
 
----
-
 The core innovation is the **Huli-Jing Engine**: an LLM-powered scheduler that follows this pattern:
 
-## 📘 Dev Journal
-
+```
+User Input (natural language) → Prompt Cache → Google Gemini API → Pydantic Validation → Django Models
 ```
 
-User Input (natural language) → Prompt Cache → Google Gemini API → Pydantic Validation → Django Models### **Day 1 — 12/10/2025**
-
-```**Progress:**
-
-- Added **JWT-based authentication**:
-
-**Key Components:**  - User registration (`/users/register/`)
-
-1. **LLM Integration** (`llm/`) — AI-powered planning using Google Gemini  - Login (`/users/jwt/`)
-
-2. **Prompt Caching** (`llm/services/prompt_cache.py`) — SHA-256 based deduplication to save API costs  - Token refresh (`/users/jwt/refresh/`)
-
-3. **Structured Output** (`llm/schema.py`) — Pydantic schemas ensure type-safe LLM responses  - Token verification (`/users/jwt/verify/`)
-
-4. **User Management** (`users/`) — JWT-based authentication with custom user model  - Token blacklist/logout (`/users/jwt/blacklist/`)
-
-5. **Core Data** (`core/`) — Goals, commitments, and prompt storage- Comprehensive **unit tests** for all endpoints
-
-- Configured **namespaced routes** under `/api/users/`
-
----
+**Key Components:**
+1. **LLM Integration** (`llm/`) — AI-powered planning using Google Gemini
+2. **Prompt Caching** (`llm/services/prompt_cache.py`) — SHA-256 based deduplication to save API costs
+3. **Structured Output** (`llm/schema.py`) — Pydantic schemas ensure type-safe LLM responses
+4. **User Management** (`users/`) — JWT-based authentication with custom user model
+5. **Core Data** (`core/`) — Goals, commitments, and prompt storage
 
 ---
 
 ## 🛠️ Tech Stack
 
-### 🧠 Architecture Flow (Mermaid)
-
 ### Core Framework
-
-- **Django 5.2+** — Web framework```mermaid
-
-- **Django REST Framework 3.16+** — RESTful API toolkitflowchart TD
-
-- **djangorestframework-simplejwt 5.5+** — JWT authentication    subgraph User
-
-- **SQLite** — Default database (easily switchable to PostgreSQL)        A[User Input] -->|Goals & Commitments| B[API Gateway]
-
-    end
+- **Django 5.2+** — Web framework
+- **Django REST Framework 3.16+** — RESTful API toolkit
+- **djangorestframework-simplejwt 5.5+** — JWT authentication
+- **SQLite** — Default database (easily switchable to PostgreSQL)
 
 ### AI & Validation
+- **Google Gemini 2.5 Flash** (`google-genai 1.43+`) — LLM for natural language planning
+- **Pydantic 2.12+** — Structured data validation for LLM outputs
+- **LangChain 0.3+** — Optional orchestration layer
 
-- **Google Gemini 2.5 Flash** (`google-genai 1.43+`) — LLM for natural language planning    subgraph Backend["Django REST API"]
+### Utilities
+- **python-dotenv 1.1+** — Environment variable management
+- **django-cors-headers 4.9+** — CORS handling for future frontend integration
+- **UV** — Fast Python package manager (optional, but recommended)
 
-- **Pydantic 2.12+** — Structured data validation for LLM outputs        B --> C[Auth Module - JWT]
+---
 
-- **LangChain 0.3+** — Optional orchestration layer        B --> D[Huli-Jing Engine]
+## 📁 Django Apps Overview
 
-        D --> E[Goal Parser]
-
-### Utilities        D --> F[Commitment Manager]
-
-- **python-dotenv 1.1+** — Environment variable management        D --> G[Time Allocator]
-
-- **django-cors-headers 4.9+** — CORS handling for future frontend integration        G --> H[Daily Plan Generator]
-
-- **UV** — Fast Python package manager (optional, but recommended)    end
-
-
-
----    subgraph Storage["Database Layer"]
-
-        H --> I[(DailyPlans)]
-
-## 📁 Django Apps Overview        E --> J[(Goals)]
-
-        F --> K[(Commitments)]
-
-| App | Purpose | Key Models |        C --> L[(Users)]
-
-|-----|---------|------------|    end
-
+| App | Purpose | Key Models |
+|-----|---------|------------|
 | **`users/`** | User authentication & profiles | `User` (custom AbstractUser with timezone) |
-
-| **`core/`** | Shared data structures | `Prompt` (stores all LLM interactions with caching) |    H -->|Response| M[Structured Day Plan]
-
-| **`llm/`** | AI-powered planning logic | `DailySchedule`, `Task` |    M --> A
-
+| **`core/`** | Shared data structures | `Prompt` (stores all LLM interactions with caching) |
+| **`llm/`** | AI-powered planning logic | `DailySchedule`, `Task` |
 
 ### Why These Dependencies?
 

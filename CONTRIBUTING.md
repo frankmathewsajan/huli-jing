@@ -31,7 +31,7 @@ This project is built for and by the neurodivergent community. We expect all con
 
 ### 🎨 Frontend Development (HIGHEST PRIORITY!)
 
-**The backend is complete, but we need a user interface!** Here are three paths:
+**The backend is happening, but we need a user interface!** Here are three paths:
 
 #### Option 1: React Web App (Recommended)
 Build a modern, responsive web application using React.
