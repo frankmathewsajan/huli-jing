@@ -7,11 +7,10 @@ from pydantic import ValidationError
 class Task(models.Model):
     RATING_CHOICES = [(i, str(i)) for i in range(1, 6)]
     PRIORITY_CHOICES = [
-        ("Highest", "Highest"),
-        ("High", "High"),
-        ("Urgent", "Urgent"),
-        ("Medium", "Medium"),
-        ("Low", "Low"),
+        ("NOW", "NOW"),
+        ("LATER", "LATER"),
+        ("DELEGATE", "DELEGATE"),
+        ("REMOVE", "REMOVE"),
     ]
 
     task_name = models.CharField(max_length=255)
@@ -85,7 +84,7 @@ class DailySchedule(models.Model):
 
     @property
     def high_priority_tasks(self):
-        return self.tasks.filter(priority__in=["Highest", "Urgent", "High"]).count()
+        return self.tasks.filter(priority__in=["NOW"]).count()
 
     def summary(self):
         """Returns a compact text summary (useful for debugging/UI)."""

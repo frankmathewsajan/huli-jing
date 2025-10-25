@@ -30,23 +30,16 @@ from llm.services.gemini_client import get_gemini_client
 
 def generate_onboarding_plan(user: AbstractUser) -> JsonResponse:
     client = get_gemini_client()
-
+    print("Here")
     goal_prompt = Prompt.objects.filter(user=user, type="goal").first()
     commitment_prompt = Prompt.objects.filter(user=user, type="commitment").first()
 
-    goal_data = {
-        "text": goal_prompt.text,
-        "parsed_data": goal_prompt.llm_response or {}
-    } if goal_prompt else None
-
-    commitment_data = {
-        "text": commitment_prompt.text,
-        "parsed_data": commitment_prompt.llm_response or {}
-    } if commitment_prompt else None
+    goal_data = goal_prompt.text if goal_prompt else None
+    commitment_data = commitment_prompt.text if commitment_prompt else None
 
     
     prompt_text = onboard_user(goal_data, commitment_data)
-    
+    print(prompt_text)
     # 🔹 Use cache layer
     cached_prompt, created = get_or_create_prompt_cache(
         user=user,

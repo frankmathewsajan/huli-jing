@@ -1,5 +1,5 @@
-import os
 from google import genai
+import os
 
 def get_gemini_client() -> genai.Client:
     api_key = os.getenv("GEMINI_API_KEY")
