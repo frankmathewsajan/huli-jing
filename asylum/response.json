@@ -1,0 +1,144 @@
+{
+    "date": "2025-10-13",
+    "day_of_week": "Monday",
+    "tasks": [
+        {
+            "task_name": "Gentle Wake-Up & Hydration",
+            "description": "Allow yourself to wake up gradually. Hydrate with water and check in with how you're feeling.",
+            "estimated_duration_minutes": 30,
+            "priority": "High",
+            "related_goal": "Fix sleep cycle, well-being",
+            "suggested_time": "3:00 PM",
+            "is_flexible": true
+        },
+        {
+            "task_name": "Prepare & Eat Late Lunch/Early Dinner",
+            "description": "Take your time to prepare and eat a nourishing meal. Focus on enjoying your food without distractions. This is crucial for avoiding skipped meals.",
+            "estimated_duration_minutes": 45,
+            "priority": "Urgent",
+            "related_goal": "Stop skipping meals",
+            "suggested_time": "3:30 PM",
+            "is_flexible": false
+        },
+        {
+            "task_name": "Transition & Sensory Check",
+            "description": "A short break to shift gears. Check your environment for comfort (lighting, sound, temperature) and grab a glass of water or a snack if needed.",
+            "estimated_duration_minutes": 15,
+            "priority": "High",
+            "related_goal": null,
+            "suggested_time": "4:15 PM",
+            "is_flexible": true
+        },
+        {
+            "task_name": "DSA Practice Session",
+            "description": "Focus on fundamental data structures and algorithms. Try to solve 1-2 medium-difficulty problems or review key concepts from a previous session.",
+            "estimated_duration_minutes": 90,
+            "priority": "Highest",
+            "related_goal": "Improve DSA skills",
+            "suggested_time": "4:30 PM",
+            "is_flexible": false
+        },
+        {
+            "task_name": "Movement & Hydration Break",
+            "description": "Stand up, stretch your body, walk around your space for a few minutes. Re-hydrate yourself.",
+            "estimated_duration_minutes": 15,
+            "priority": "High",
+            "related_goal": "Well-being",
+            "suggested_time": "6:00 PM",
+            "is_flexible": true
+        },
+        {
+            "task_name": "Review Core Subject Fundamentals",
+            "description": "Pick one core subject (e.g., Operating Systems, Computer Networks) and review your notes or a specific chapter. Focus on understanding key concepts.",
+            "estimated_duration_minutes": 60,
+            "priority": "High",
+            "related_goal": "Understand core subjects",
+            "suggested_time": "6:15 PM",
+            "is_flexible": true
+        },
+        {
+            "task_name": "Transition & Brain Break",
+            "description": "Step away from your work. Do something completely different for a few minutes – listen to music, look out a window, or engage in a brief, calming activity.",
+            "estimated_duration_minutes": 15,
+            "priority": "High",
+            "related_goal": null,
+            "suggested_time": "7:15 PM",
+            "is_flexible": true
+        },
+        {
+            "task_name": "Flagship Project: Planning & Initial Setup",
+            "description": "Dedicate time to define the scope of your flagship project. Outline key features, sketch a high-level architecture, and set up your development environment. Don't aim for perfection, just a solid start.",
+            "estimated_duration_minutes": 120,
+            "priority": "High",
+            "related_goal": "Finish flagship project for resume",
+            "suggested_time": "7:30 PM",
+            "is_flexible": false
+        },
+        {
+            "task_name": "Prepare & Eat Dinner",
+            "description": "Another essential meal. Prepare and eat your dinner slowly and mindfully. This is non-negotiable for your health.",
+            "estimated_duration_minutes": 45,
+            "priority": "Urgent",
+            "related_goal": "Stop skipping meals",
+            "suggested_time": "9:30 PM",
+            "is_flexible": false
+        },
+        {
+            "task_name": "Mini-Movement Break",
+            "description": "A quick stretch or walk to refresh before the next task. Get some fresh air if possible.",
+            "estimated_duration_minutes": 10,
+            "priority": "High",
+            "related_goal": "Well-being",
+            "suggested_time": "10:15 PM",
+            "is_flexible": true
+        },
+        {
+            "task_name": "AWS Lab 1: Introduction to AWS",
+            "description": "Start with the first AWS lab. Focus on understanding the basic concepts and navigating the AWS console. Break it down into smaller steps if needed.",
+            "estimated_duration_minutes": 60,
+            "priority": "High",
+            "related_goal": "Solve 8 labs of AWS",
+            "suggested_time": "10:25 PM",
+            "is_flexible": false
+        },
+        {
+            "task_name": "Transition & Self-Check",
+            "description": "A brief moment to re-center. How are you feeling? Do you need anything before moving on?",
+            "estimated_duration_minutes": 10,
+            "priority": "High",
+            "related_goal": null,
+            "suggested_time": "11:25 PM",
+            "is_flexible": true
+        },
+        {
+            "task_name": "Oracle Data Science Course - Module 1",
+            "description": "Enroll in the Oracle Data Science Professional Course and begin with the introductory module. Focus on understanding the overview and initial concepts.",
+            "estimated_duration_minutes": 60,
+            "priority": "Medium",
+            "related_goal": "Start Oracle Data Science course",
+            "suggested_time": "11:35 PM",
+            "is_flexible": true
+        },
+        {
+            "task_name": "Communication Practice: Journaling/Self-Reflection",
+            "description": "Dedicate time to write about your day or a specific topic. This low-pressure environment can help you organize thoughts and practice verbalizing them without direct pressure.",
+            "estimated_duration_minutes": 30,
+            "priority": "Medium",
+            "related_goal": "Improve communication skills",
+            "suggested_time": "12:35 AM (Oct 14)",
+            "is_flexible": true
+        },
+        {
+            "task_name": "Wind-Down Routine & Prepare for Bed",
+            "description": "Begin your wind-down routine. Turn off bright screens, dim lights, and engage in calming activities like reading a physical book, listening to quiet music, or stretching. Aim to be in bed by 2:00 AM.",
+            "estimated_duration_minutes": 60,
+            "priority": "High",
+            "related_goal": "Fix sleep cycle",
+            "suggested_time": "1:05 AM (Oct 14)",
+            "is_flexible": false
+        }
+    ],
+    "total_committed_hours": 10.75,
+    "total_available_hours": 11.0,
+    "notes": "Hello! This plan for Monday, October 13th, is designed around your current sleep cycle, starting your day in the afternoon. It prioritizes your key goals (DSA, Academics, Project, AWS, and the Oracle course) while also building in crucial well-being habits like regular meals, breaks, and a dedicated wind-down for sleep. It's important to remember:\r\n\r\n1.  **Flexibility is Key:** This is a guide, not a rigid schedule. If a task feels overwhelming, break it down further or take an extra break. It's okay to adjust.\r\n2.  **Self-Compassion:** You're working on a lot! Be kind to yourself. If you can't get to everything, that's perfectly fine. Focus on consistent effort rather than perfection.\r\n3.  **Meal Times are Non-Negotiable:** Please prioritize your meals. They are vital for your energy, focus, and overall health.\r\n4.  **Sleep Cycle Adjustment:** While we're working with your current sleep pattern for today, gently try to shift your sleep time earlier by 15-30 minutes each day. The 'Wind-Down Routine' is a crucial step towards this. Aiming for 2:00 AM sleep tonight is a small step towards an earlier bedtime.\r\n5.  **Environment Matters:** Pay attention to your sensory environment during study times and breaks. Adjust lighting, minimize noise, or use headphones if that helps your focus.\r\n6.  **Hydration:** Keep a water bottle handy and sip throughout the day.\r\n\r\nThis Monday is a great opportunity to make progress on your big goals without fixed classes. You've got this!"
+}

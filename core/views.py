@@ -1,13 +1,21 @@
 from rest_framework import generics, status, permissions
 from rest_framework.response import Response
+
+from llm.planners.daily_plan import generate_daily_plan
 from .models import Prompt
 from .serializers import PromptSerializer
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+from llm.planners.onboarding import generate_onboarding_plan
 import hashlib
+
+
 class PromptCreateView(generics.ListCreateAPIView):
     """
     POST: Create or retrieve a cached prompt for the authenticated user.
     GET:  List all prompts belonging to the authenticated user.
     """
+
     serializer_class = PromptSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -42,3 +50,34 @@ class PromptCreateView(generics.ListCreateAPIView):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+class OnboardUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        """
+        Onboard the authenticated user and generate their initial daily plan.
+        """
+        try:
+            plan = generate_onboarding_plan(request.user)
+            return Response(plan.model_dump(), status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+class DailyPlanView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        """
+        Generate and return the daily plan for the authenticated user.
+        """
+        try:
+            reschedule = request.query_params.get("reschedule", "false").lower() == "true"
+            plan = generate_daily_plan(request.user, reschedule=reschedule)
+            return plan
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            

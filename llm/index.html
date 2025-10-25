@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Daily Schedule Feedback</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      padding: 20px;
+      max-width: 900px;
+      margin: auto;
+      background: #f8fafc;
+      color: #111;
+    }
+    h1 { text-align: center; margin-bottom: 30px; }
+    .auth, .task { background: white; border-radius: 8px; padding: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
+    .task h3 { margin: 0 0 6px; }
+    .task p { margin: 4px 0; }
+    input, textarea, select {
+      width: 100%;
+      margin-top: 4px;
+      padding: 6px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      padding: 8px 14px;
+      border: none;
+      background: #2563eb;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:hover { background: #1d4ed8; }
+    .header-controls { display: flex; gap: 10px; align-items: center; margin-bottom: 20px; }
+    .task button { margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Daily Schedule Feedback</h1>
+
+  <div class="auth">
+    <label for="authToken"><strong>Bearer Token:</strong></label>
+    <input type="text" id="authToken" placeholder="Paste your JWT access token here" />
+  </div>
+
+  <div class="header-controls">
+    <label for="scheduleDate"><strong>Schedule Date:</strong></label>
+    <input type="date" id="scheduleDate" />
+    <button onclick="loadSchedule()">Load Schedule</button>
+    <button onclick="submitAll()">Submit All Feedback</button>
+  </div>
+
+  <div id="tasks"></div>
+
+  <script>
+    const baseURL = "http://127.0.0.1:8000/api/llm";
+
+    async function loadSchedule() {
+      const date = document.getElementById("scheduleDate").value;
+      const token = document.getElementById("authToken").value.trim();
+      const tasksDiv = document.getElementById("tasks");
+
+      if (!token) return alert("Please enter your Bearer token.");
+      if (!date) return alert("Please select a date.");
+
+      tasksDiv.innerHTML = "Loading...";
+
+      try {
+        const res = await fetch(`${baseURL}/schedules/?date=${date}`, {
+          headers: { "Authorization": `Bearer ${token}` },
+        });
+
+        if (!res.ok) throw new Error(`Failed to load: ${res.statusText}`);
+        const data = await res.json();
+        if (!data.length) return tasksDiv.innerHTML = "<p>No schedule found for this date.</p>";
+
+        const schedule = data[0];
+        renderTasks(schedule.tasks);
+
+      } catch (err) {
+        tasksDiv.innerHTML = "❌ Failed to load schedule.";
+        console.error(err);
+      }
+    }
+
+    function renderTasks(tasks) {
+      const tasksDiv = document.getElementById("tasks");
+      tasksDiv.innerHTML = "";
+
+      tasks.forEach(task => {
+        const el = document.createElement("div");
+        el.className = "task";
+        el.innerHTML = `
+          <h3>${task.task_name}</h3>
+          <p><strong>Priority:</strong> ${task.priority}</p>
+          <p>${task.description}</p>
+          <label>Completed:
+            <input type="checkbox" ${task.completed ? "checked" : ""} data-id="${task.id}" class="completed"/>
+          </label><br/>
+          <label>Feedback:
+            <textarea rows="3" data-id="${task.id}" class="feedback">${task.feedback || ""}</textarea>
+          </label><br/>
+          <label>Rating:
+            <select data-id="${task.id}" class="rating">
+              <option value="">--</option>
+              ${[1,2,3,4,5].map(n => `<option value="${n}" ${task.rating == n ? "selected" : ""}>${n}</option>`).join("")}
+            </select>
+          </label>
+          <button onclick="submitTask(${task.id})">Save</button>
+        `;
+        tasksDiv.appendChild(el);
+      });
+    }
+
+    async function submitTask(taskId) {
+      const token = document.getElementById("authToken").value.trim();
+      if (!token) return alert("Please enter your Bearer token.");
+
+      const feedback = document.querySelector(`.feedback[data-id="${taskId}"]`).value;
+      const rating = document.querySelector(`.rating[data-id="${taskId}"]`).value;
+      const completed = document.querySelector(`.completed[data-id="${taskId}"]`).checked;
+
+      try {
+        const res = await fetch(`${baseURL}/tasks/${taskId}/`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            feedback,
+            rating: rating ? parseInt(rating) : null,
+            completed
+          })
+        });
+
+        if (!res.ok) throw new Error(`Failed: ${res.statusText}`);
+        alert("✅ Task updated successfully!");
+
+      } catch (err) {
+        console.error(err);
+        alert("❌ Error updating task.");
+      }
+    }
+
+    async function submitAll() {
+      const token = document.getElementById("authToken").value.trim();
+      if (!token) return alert("Please enter your Bearer token.");
+
+      const tasks = document.querySelectorAll(".task");
+      for (const task of tasks) {
+        const id = task.querySelector(".completed").dataset.id;
+        const feedback = task.querySelector(".feedback").value;
+        const rating = task.querySelector(".rating").value;
+        const completed = task.querySelector(".completed").checked;
+
+        try {
+          await fetch(`${baseURL}/tasks/${id}/`, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({
+              feedback,
+              rating: rating ? parseInt(rating) : null,
+              completed
+            })
+          });
+        } catch (err) {
+          console.error("Error updating task", id, err);
+        }
+      }
+
+      alert("✅ All feedback submitted!");
+    }
+  </script>
+</body>
+</html>
